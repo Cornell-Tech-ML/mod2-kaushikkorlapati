@@ -133,7 +133,7 @@ class Tensor:
     def _ensure_tensor(self, b: TensorLike) -> Tensor:
         """Turns a python number into a tensor with the same backend."""
         if isinstance(b, (int, float)):
-            c = Tensor.make([b], (1,), backend=self.backend)
+            c = Tensor.make([b], (1,), backend=self.backend)  # type: ignore
         else:
             b._type_(self.backend)
             c = b
@@ -490,6 +490,10 @@ class Tensor:
         """
         other = self._ensure_tensor(other)
         return LT.apply(self, other)
+
+    def __gt__(self, other: TensorLike) -> Tensor:
+        """Element-wise greater-than comparison."""
+        return LT.apply(self._ensure_tensor(other), self)
 
     def __eq__(self, other: TensorLike) -> Tensor:
         """Implements the equality comparison operation for tensors.

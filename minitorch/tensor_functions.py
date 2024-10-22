@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import random
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 import numpy as np
 
@@ -485,7 +485,7 @@ class Exp(Function):
 
 class Sum(Function):
     @staticmethod
-    def forward(ctx: Context, t: Tensor, dim: int = None) -> Tensor:
+    def forward(ctx: Context, t: Tensor, dim: Optional[Tensor] | None) -> Tensor:
         """Compute the sum of the elements of the input tensor along a specified dimension.
 
         This method reduces the input tensor `t` by summing its elements
@@ -513,7 +513,7 @@ class Sum(Function):
             return t.f.add_reduce(t.contiguous().view(int(operators.prod(t.shape))), 0)
 
     @staticmethod
-    def backward(ctx: Context, grad_output: Tensor) -> Tuple[Tensor, Tensor]:
+    def backward(ctx: Context, grad_output: Tensor) -> Tuple[Tensor, float]:
         """Compute the gradient of the sum operation during backpropagation.
 
         This method returns the gradient of the input tensor with respect
@@ -580,8 +580,8 @@ class LT(Function):
             of the input tensors.
 
         """
-        (t1_shape, t2_shape) = ctx.saved_values
-        return zeros(t1_shape), zeros(t2_shape)
+        zero_grad = grad_output * 0
+        return zero_grad, zero_grad
 
 
 class EQ(Function):

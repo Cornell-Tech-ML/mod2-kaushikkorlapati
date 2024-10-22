@@ -1,7 +1,7 @@
 """Collection of the core mathematical operators used throughout the code base."""
 
 import math
-from typing import Callable, List
+from typing import Callable, List, Iterable
 
 # Mathematical functions:
 
@@ -357,7 +357,7 @@ def zipWith(
 
 
 def reduce(
-    func: Callable[[float, float], float], lst: List[float], initial: float
+    func: Callable[[float, float], float], lst: Iterable[float], initial: float
 ) -> float:
     """Reduce `lst` to a single value using binary function `func` with an initial value."""
     result = initial
@@ -390,6 +390,6 @@ def sum(lst: List[float]) -> float:
     return reduce(lambda x, y: x + y, lst, 0.0)
 
 
-def prod(lst: List[float]) -> float:
+def prod(lst: Iterable[float]) -> float:
     """Compute the product of all elements in the list."""
     return reduce(lambda x, y: x * y, lst, 1.0)

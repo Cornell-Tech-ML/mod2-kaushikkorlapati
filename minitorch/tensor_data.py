@@ -98,30 +98,9 @@ def broadcast_index(
         None
 
     """
-    big_shape = big_shape[::-1]
-    shape = shape[::-1]
-    big_index = big_index[::-1]
-
-    # Prepare the output index with the same length as the smaller shape
-    out_index[:] = [0] * len(shape)
-
-    # Iterate through the dimensions
     for i in range(len(shape)):
-        big_dim = (
-            big_shape[i] if i < len(big_shape) else 1
-        )  # Use 1 for extra dimensions in big_shape
-        if big_dim == shape[i]:  # Dimensions match
-            out_index[i] = big_index[i]
-        elif shape[i] == 1:  # Small tensor can stretch
-            out_index[i] = big_index[i]
-        else:
-            # If the dimensions don't match and small shape isn't 1, raise an error
-            raise IndexingError(
-                f"Cannot convert index: {big_index[::-1]} from shape: {big_shape[::-1]} to shape: {shape[::-1]}."
-            )
-
-    # Reverse the output index to restore original order
-    out_index.reverse()
+        new_tensor = i + len(big_shape) - len(shape)
+        out_index[i] = big_index[new_tensor] if shape[i] > 1 else 0
 
 
 def shape_broadcast(shape1: UserShape, shape2: UserShape) -> UserShape:
